@@ -1,0 +1,57 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    # NOUVEAUX PRÉFIXES POUR SPRING CLOUD GATEWAY AVEC WEBFLUX
+    gateway:
+      server: # Nouveau préfixe pour les propriétés de serveur de Gateway
+        webflux: # Spécifique à WebFlux
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          routes:
+            - id: clients-service
+              uri: lb://clients-service
+              predicates:
+                - Path=/api/clients/**
+
+            - id: commandes-service
+              uri: lb://commandes-service
+              predicates:
+                - Path=/api/commandes/**
+
+            - id: product-service
+              uri: lb://product-service
+              predicates:
+                - Path=/api/produits/**
+
+            - id: payments-service
+              uri: lb://payments-service
+              predicates:
+                - Path=/api/paiements/**
+  # AJOUT DE LA CLÉ SECRÈTE JWT ICI
+  security:
+    jwt:
+      secret: uIc2oqEINd7cHiRLX5jzbkj5urhYakPlm1JK84pGp55LsrXxqlk93kzeiD7jfPeCRvlnxZ9320B5kMfwxTTL8g==
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.reactive.function.client: DEBUG
+    reactor.netty.http.client.HttpClient: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.web.server: DEBUG # Pour WebFlux Security
+    org.springframework.security.authentication: DEBUG
+    com.ff.api_gateway.filter: DEBUG
+    com.ff.api_gateway.security: DEBUG
