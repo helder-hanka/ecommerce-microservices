@@ -1,5 +1,6 @@
 package com.ff.clients_service.controller;
 
+import com.ff.clients_service.dto.RefreshTokenRequest;
 import com.ff.clients_service.dto.AuthRequest;
 import com.ff.clients_service.dto.AuthResponse;
 import com.ff.clients_service.dto.RegisterRequest;
@@ -10,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/client/auth")
+@RequestMapping("/api/clients/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -27,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public AuthResponse refresh(@RequestParam String refreshToken){
-        return authService.refreshToken(refreshToken);
+    public AuthResponse refresh(@RequestBody RefreshTokenRequest request) {
+        return authService.refreshToken(request.getRefreshToken());
     }
 }
