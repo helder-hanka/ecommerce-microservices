@@ -1,5 +1,6 @@
 package com.ff.clients_service.service;
 
+import com.ff.clients_service.dto.ProfileResponse;
 import com.ff.clients_service.dto.ProfileUpdateRequest;
 import com.ff.clients_service.entity.Profile;
 import com.ff.clients_service.entity.User;
@@ -17,7 +18,7 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
 
-    public Profile saveProfile(String email, ProfileUpdateRequest request){
+    public ProfileResponse saveProfile(String email, ProfileUpdateRequest request){
         var user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
         var profile = Profile.builder()
                 .user(user)
@@ -27,10 +28,20 @@ public class ProfileService {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        return profileRepository.save(profile);
+        profileRepository.save(profile);
+
+        return ProfileResponse.builder()
+                .id(profile.getId())
+                .firstName(profile.getFirstName())
+                .lastName(profile.getLastName())
+                .username(profile.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .createdAt(profile.getCreatedAt().toString())
+                .build();
     }
 
-    public Profile updateProfile(String email, ProfileUpdateRequest request){
+    public ProfileResponse updateProfile(String email, ProfileUpdateRequest request){
         User user = userRepository.findByEmail(email).orElseThrow(()-> new UsernameNotFoundException("Utilisateur non trouvé"));
 
         Profile profile = profileRepository.findByUser(user).orElseThrow(()-> new RuntimeException("Profile non trouvé"));
@@ -39,12 +50,32 @@ public class ProfileService {
         profile.setLastName(request.getLastName());
         profile.setUsername(request.getUsername());
         profile.setUpdatedAt(LocalDateTime.now());
-        return profileRepository.save(profile);
+         profileRepository.save(profile);
+         return ProfileResponse.builder()
+                .id(profile.getId())
+                .firstName(profile.getFirstName())
+                .lastName(profile.getLastName())
+                .username(profile.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .createdAt(profile.getCreatedAt().toString())
+                .updatedAt(profile.getUpdatedAt() != null ? profile.getUpdatedAt().toString() : null)
+                 .build();
     }
 
-    public Profile getProfile(String email) {
+    public ProfileResponse getProfile(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("Utilisateur non trouver"));
 
-        return profileRepository.findByUser(user).orElseThrow(()-> new RuntimeException("Profile non trouver"));
+        Profile profile = profileRepository.findByUser(user).orElseThrow(()-> new RuntimeException("Profile non trouver"));
+        return  ProfileResponse.builder()
+                .id(profile.getId())
+                .firstName(profile.getFirstName())
+                .lastName(profile.getLastName())
+                .username(profile.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .createdAt(profile.getCreatedAt().toString())
+                .updatedAt(profile.getUpdatedAt() != null ? profile.getUpdatedAt().toString() : null)
+                .build();
     }
 }
