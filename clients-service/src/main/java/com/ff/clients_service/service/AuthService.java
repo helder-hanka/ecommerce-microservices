@@ -2,9 +2,9 @@ package com.ff.clients_service.service;
 
 import com.ff.clients_service.dto.*;
 import com.ff.clients_service.entity.User;
-import com.ff.clients_service.entity.UserRole;
 import com.ff.clients_service.repository.UserRepository;
 import com.ff.clients_service.security.JwtService;
+import com.ff.clients_service.utils.MessageResponse;
 import com.ff.clients_service.utils.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.*;
@@ -21,7 +21,7 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authManager;
 
-    public AuthResponse register(RegisterRequest request) {
+    public MessageResponse register(RegisterRequest request) {
         var userEmail = userRepository.findByEmail(request.getEmail()).isPresent();
      if (userEmail){
          throw new ResourceNotFoundException("Email is already taken!");
@@ -32,18 +32,8 @@ public class AuthService {
                 .role(request.getRole())
                 .createdAt(LocalDateTime.now())
                 .build();
-        var savedUser = userRepository.save(user);
-        var accessToken = jwtService.generateToken(savedUser.getEmail());
-        var refreshToken = jwtService.generateToken(savedUser.getEmail());
-
-        savedUser.setRefreshToken(refreshToken);
-        userRepository.save(savedUser);
-
-        return AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .role(UserRole.valueOf(savedUser.getRole().name()))
-                .build();
+        userRepository.save(user);
+        return new MessageResponse("User registered successfully!");
     }
 
     public AuthResponse authenticate(AuthRequest request) {
@@ -52,16 +42,17 @@ public class AuthService {
         );
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
-        var accessToken = jwtService.generateToken(user.getEmail());
-        var refreshToken = jwtService.generateToken(user.getEmail());
+        var accessToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateToken(user);
 
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
 
         return AuthResponse.builder()
+                .userId(user.getId())
+                .role(user.getRole())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
-                .role(user.getRole())
                 .build();
     }
 
@@ -74,11 +65,12 @@ public class AuthService {
             throw new RuntimeException("Invalid Refresh Token");
         }
 
-        var newAccessToken = jwtService.generateToken(email);
+        var newAccessToken = jwtService.generateToken(user);
         return AuthResponse.builder()
+                .userId(user.getId())
+                .role(user.getRole())
                 .accessToken(newAccessToken)
                 .refreshToken(refreshToken)
-                .role(user.getRole())
                 .build();
     }
 

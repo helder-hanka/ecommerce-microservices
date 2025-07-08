@@ -5,6 +5,7 @@ import com.ff.clients_service.dto.AuthRequest;
 import com.ff.clients_service.dto.AuthResponse;
 import com.ff.clients_service.dto.RegisterRequest;
 import com.ff.clients_service.service.AuthService;
+import com.ff.clients_service.utils.MessageResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) throws Exception {
+    public ResponseEntity<MessageResponse> register(@Valid @RequestBody RegisterRequest registerRequest) throws Exception {
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
