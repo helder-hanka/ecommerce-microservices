@@ -44,4 +44,14 @@ public class ProductService {
         Product product = productRepo.findById(productId).orElse(null);
         return product != null ? product.getStock() : -1;
     }
+    // Retrieves all products associated with a specific admin
+    public List<Product> findByAdminId(Long adminId) {
+        return productRepo.findByAdminId(adminId);
+    }
+    // get by admin id and product id
+    public Product findByAdminIdAndProductId(Long adminId, Long productId) {
+        return productRepo.findById(productId)
+                .filter(product -> product.getAdminId().equals(adminId))
+                .orElse(null);
+    }
 }

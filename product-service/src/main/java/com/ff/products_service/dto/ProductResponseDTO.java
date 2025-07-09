@@ -11,6 +11,7 @@ import java.util.List;
 public class ProductResponseDTO {
 @Schema(description = "ID unique du produit", example = "1")
     private Long id;
+    private Long adminId;
     @Schema(description = "Nom du produit", example = "Chaise Ergonomique")
     private String name;
     @Schema(description = "Description du produit", example = "Une chaise confortable pour le bureau.")
