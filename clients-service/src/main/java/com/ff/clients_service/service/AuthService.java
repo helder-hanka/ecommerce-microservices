@@ -40,8 +40,7 @@ public class AuthService {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-        var user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow();
+        var user = userRepository.findByEmail(request.getEmail()).orElseThrow(()-> new ResourceNotFoundException("User not found with email: " + request.getEmail()));
         var accessToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateToken(user);
 
@@ -61,7 +60,7 @@ public class AuthService {
         var user = userRepository.findByEmail(email)
                 .orElseThrow();
 
-        if (!refreshToken.equals(user.getRefreshToken()) || !jwtService.isTokenValid(refreshToken, email)) {
+        if (!refreshToken.equals(user.getRefreshToken()) || !jwtService.isTokenValid(refreshToken)) {
             throw new RuntimeException("Invalid Refresh Token");
         }
 

@@ -17,11 +17,11 @@ public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable=false, length = 20)
+    @Column(nullable=false, length = 20)
     private String username;
-    @Column(unique = true, nullable=false, length = 20)
+    @Column(nullable=false, length = 20)
     private String firstName;
-    @Column(unique = true, nullable=false, length = 20)
+    @Column(nullable=false, length = 20)
     private String lastName;
 
     @OneToOne
