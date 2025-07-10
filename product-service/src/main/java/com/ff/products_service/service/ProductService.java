@@ -54,4 +54,15 @@ public class ProductService {
                 .filter(product -> product.getAdminId().equals(adminId))
                 .orElse(null);
     }
+
+    //Update stock by product id
+    public Product updateStock(Long productId, int stock) {
+        Product product = productRepo.findById(productId).orElse(null);
+        if (stock < 1) {
+            throw new IllegalArgumentException("Stock cannot be negative");
+        }
+        if (product == null) return null;
+        product.setStock(stock);
+        return productRepo.save(product);
+    }
 }

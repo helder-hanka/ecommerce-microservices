@@ -24,10 +24,14 @@ spring:
               predicates:
                 - Path=/api/commandes/**
 
-            - id: product-service
+            - id: product-service-private
               uri: lb://product-service
               predicates:
                 - Path=/api/products/**
+            - id: product-service-public
+              uri: lb://product-service
+              predicates:
+                - Path=/api/public/products/**
 
             - id: payments-service
               uri: lb://payments-service

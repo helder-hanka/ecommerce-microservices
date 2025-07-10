@@ -59,4 +59,18 @@ public class ProductController {
        }
        return ResponseEntity.ok(ResponseBuilder.success("Product stock", product.getStock()));
     }
+
+    // Update stock by product id
+    @PutMapping("/{id}/stock")
+    @Operation(summary = "Mettre à jour le stock d'un produit", description = "Met à jour la quantité de stock disponible pour un produit spécifique.")
+    public ResponseEntity<ApiRes<Product>> updateProductStock(
+            @Parameter(description = "ID unique du produit dont on veut mettre à jour le stock", example = "1") @PathVariable Long id,
+            @Valid @RequestBody StockUpdateRequest stockUpdateRequest) {
+
+        Product product = productService.updateStock(id, stockUpdateRequest.getQuantity());
+        if (product == null) {
+            throw new ResourceNotFoundException("Product not found with id " + id);
+        }
+        return ResponseEntity.ok(ResponseBuilder.success("Product stock updated", product));
+    }
 }
