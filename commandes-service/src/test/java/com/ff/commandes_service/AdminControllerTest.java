@@ -1,27 +1,30 @@
 package com.ff.commandes_service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ff.commandes_service.controller.AdminController;
+import com.ff.commandes_service.dto.OrderStatusRequest;
 import com.ff.commandes_service.entity.OrderStatus;
 import com.ff.commandes_service.entity.Orders;
+import com.ff.commandes_service.handler.GlobalExceptionHandler;
+import com.ff.commandes_service.security.JwtService;
 import com.ff.commandes_service.service.AdminService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-
 
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,34 +34,58 @@ public class AdminControllerTest {
     private MockMvc mockMvc;
 
     @Mock
+    private JwtService jwtService;
+
+    @Mock
     private AdminService adminService;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final Long TEST_ADMIN_ID = 123L;
+    private static final String MOCK_AUTH_HEADER = "Bearer some.jwt.token";
+    private static final String MOCK_TOKEN = "some.jwt.token";
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        AdminController adminController = new AdminController(adminService);
-        mockMvc = MockMvcBuilders.standaloneSetup(adminController).build();
+        AdminController adminController = new AdminController(adminService, jwtService);
+        mockMvc = MockMvcBuilders.standaloneSetup(adminController)
+                .setControllerAdvice(new GlobalExceptionHandler()) // <-- Intègre le GlobalExceptionHandler
+                .build();
     }
+
     @Test
-    void shouldReturnAllOrders() throws Exception {
-        Orders order1 = new Orders(); order1.setId(1L);
-        Orders order2 = new Orders(); order2.setId(2L);
+    void getAllOrdersByAdmin_shouldReturnAllOrders() throws Exception {
+        Orders order1 = new Orders();
+        order1.setId(1L);
+        order1.setAdminId(TEST_ADMIN_ID);
+        Orders order2 = new Orders();
+        order2.setId(2L);
+        order2.setAdminId(TEST_ADMIN_ID);
         List<Orders> ordersList = Arrays.asList(order1, order2);
 
-        when(adminService.getAllOrders()).thenReturn(Optional.of(ordersList));
+        when(jwtService.extractUserId(MOCK_TOKEN)).thenReturn(TEST_ADMIN_ID);
+        when(adminService.getAllOrdersByAdmin(TEST_ADMIN_ID)).thenReturn(ordersList);
 
-        mockMvc.perform(get("/api/order/admin"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/order/admin")
+                        .header("Authorization", MOCK_AUTH_HEADER))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[1].id").value(2L));
     }
 
     @Test
-    void shouldReturnOrderById() throws Exception {
-        Orders order = new Orders(); order.setId(1L);
+    void getAllOrdersByAdmin_shouldReturnBadRequest_ifNoOrdersFound() throws Exception {
+        when(jwtService.extractUserId(MOCK_TOKEN)).thenReturn(TEST_ADMIN_ID);
+        when(adminService.getAllOrdersByAdmin(TEST_ADMIN_ID)).thenReturn(List.of());
 
-        when(adminService.getOrderById(1L)).thenReturn(Optional.of(order));
-
-        mockMvc.perform(get("/api/order/admin/1"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/order/admin")
+                        .header("Authorization", MOCK_AUTH_HEADER))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("No orders found for admin with id: " + TEST_ADMIN_ID))
+                .andExpect(jsonPath("$.error").value("Bad Request"));
     }
 
     @Test
@@ -66,70 +93,134 @@ public class AdminControllerTest {
         when(adminService.countOrders()).thenReturn(5L);
 
         mockMvc.perform(get("/api/order/admin/count"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(5L));
     }
+
     @Test
     void shouldReturnOrderCountByStatus() throws Exception {
         when(adminService.countOrdersByStatus("SHIPPED")).thenReturn(3L);
 
         mockMvc.perform(get("/api/order/admin/count/status")
-                        .param("status", "SHIPPED"))
-                .andExpect(status().isOk());
+                        .param("status", "SHIPPED")) // <-- N'oubliez pas .param pour les @RequestParam
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(3L));
     }
+
     @Test
     void shouldReturnAllOrderCount() throws Exception {
         when(adminService.countAllOrders()).thenReturn(10L);
 
         mockMvc.perform(get("/api/order/admin/count/all"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").value(10L));
     }
 
     @Test
-    void shouldUpdateOrderStatus() throws Exception {
-        Orders order = new Orders(); order.setId(1L); order.setOrderStatus(OrderStatus.SHIPPED);
+    void getOrderByIdByAdmin_shouldReturnOrderById() throws Exception {
+        Long orderId = 1L;
+        Orders order = new Orders();
+        order.setId(orderId);
+        order.setAdminId(TEST_ADMIN_ID);
 
-        when(adminService.updateOrderStatus(1L, OrderStatus.SHIPPED)).thenReturn(Optional.of(order));
+        when(jwtService.extractUserId(MOCK_TOKEN)).thenReturn(TEST_ADMIN_ID);
+        when(adminService.getOrderByIdByAdmin(orderId, TEST_ADMIN_ID)).thenReturn(Optional.of(order));
 
-        mockMvc.perform(get("/api/order/admin/1/status")
-                        .param("status", "SHIPPED"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/order/admin/" + orderId)
+                        .header("Authorization", MOCK_AUTH_HEADER))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(orderId));
     }
 
     @Test
-    void shouldUpdateOrderStatusByString() throws Exception {
-        Orders order = new Orders(); order.setId(1L); order.setOrderStatus(OrderStatus.SHIPPED);
+    void getOrderByIdByAdmin_shouldReturnBadRequest_ifOrderNotFoundOrNotAuthorized() throws Exception {
+        Long orderId = 999L;
+        when(jwtService.extractUserId(MOCK_TOKEN)).thenReturn(TEST_ADMIN_ID);
+        // Simule le service lançant l'exception que le contrôleur est censé gérer
+        when(adminService.getOrderByIdByAdmin(orderId, TEST_ADMIN_ID))
+                .thenThrow(new IllegalArgumentException("Order not found with id: " + orderId + " for admin with id: " + TEST_ADMIN_ID));
 
-        when(adminService.updateOrderStatus(1L, OrderStatus.SHIPPED)).thenReturn(Optional.of(order));
-
-        mockMvc.perform(get("/api/order/admin/1/status/SHIPPED"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/order/admin/" + orderId)
+                        .header("Authorization", MOCK_AUTH_HEADER))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Order not found with id: " + orderId + " for admin with id: " + TEST_ADMIN_ID))
+                .andExpect(jsonPath("$.error").value("Bad Request"));
     }
-    @Test
-    void shouldReturnOrdersByStatus() throws Exception {
-        Orders order1 = new Orders(); order1.setId(1L); order1.setOrderStatus(OrderStatus.SHIPPED);
-        Orders order2 = new Orders(); order2.setId(2L); order2.setOrderStatus(OrderStatus.SHIPPED);
-        List<Orders> ordersList = Arrays.asList(order1, order2);
 
-        when(adminService.getAllOrders()).thenReturn(Optional.of(ordersList));
+    @Test
+    void updateOrderStatus_shouldUpdateOrderSuccessfully() throws Exception {
+        Long orderId = 1L;
+        OrderStatus newStatus = OrderStatus.SHIPPED;
+        Orders updatedOrder = new Orders();
+        updatedOrder.setId(orderId);
+        updatedOrder.setAdminId(TEST_ADMIN_ID);
+        updatedOrder.setOrderStatus(newStatus);
+
+        OrderStatusRequest statusRequest = new OrderStatusRequest();
+        statusRequest.setOrderStatus(OrderStatus.valueOf(newStatus.toString()));
+
+        when(jwtService.extractUserId(MOCK_TOKEN)).thenReturn(TEST_ADMIN_ID);
+        // Le service retourne un Optional de la commande mise à jour (non vide)
+        when(adminService.updateOrderStatus(eq(orderId), eq(TEST_ADMIN_ID), any(OrderStatusRequest.class)))
+                .thenReturn(Optional.of(updatedOrder));
+
+        // Le contrôleur est maintenant @PutMapping, le test utilise PUT
+        mockMvc.perform(put("/api/order/admin/" + orderId + "/orderStatus")
+                        .header("Authorization", MOCK_AUTH_HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(statusRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(orderId))
+                .andExpect(jsonPath("$.orderStatus").value(newStatus.toString()));
+    }
+
+    @Test
+    void updateOrderStatus_shouldReturnBadRequest_ifUpdateFails() throws Exception {
+        Long orderId = 1L;
+        OrderStatus newStatus = OrderStatus.SHIPPED;
+        OrderStatusRequest statusRequest = new OrderStatusRequest();
+        statusRequest.setOrderStatus(OrderStatus.valueOf(newStatus.toString()));
+
+        when(jwtService.extractUserId(MOCK_TOKEN)).thenReturn(TEST_ADMIN_ID);
+        // Simule le service lançant l'exception que le contrôleur est censé gérer
+        String errorMessage = "Order cannot be updated to " + newStatus + " after it has been CANCELLED"; // Example error message
+        when(adminService.updateOrderStatus(eq(orderId), eq(TEST_ADMIN_ID), any(OrderStatusRequest.class)))
+                .thenThrow(new IllegalArgumentException(errorMessage));
+
+        mockMvc.perform(put("/api/order/admin/" + orderId + "/orderStatus")
+                        .header("Authorization", MOCK_AUTH_HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(statusRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(errorMessage)) // Expect the specific error message from the service
+                .andExpect(jsonPath("$.error").value("Bad Request"));;
+    }
+
+    @Test
+    void getAdminIdFromToken_shouldReturnBadRequest_ifMissingAuthHeader() throws Exception {
+        mockMvc.perform(get("/api/order/admin"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Authorization header is missing or request is null"))
+                .andExpect(jsonPath("$.error").value("Bad Request"));
+    }
+
+    @Test
+    void getAdminIdFromToken_shouldReturnBadRequest_ifInvalidAuthFormat() throws Exception {
+        mockMvc.perform(get("/api/order/admin")
+                        .header("Authorization", "InvalidToken"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Invalid Authorization header format"))
+                .andExpect(jsonPath("$.error").value("Bad Request"));
+    }
+
+    @Test
+    void getAdminIdFromToken_shouldReturnBadRequest_ifAdminIdNotFoundInToken() throws Exception {
+        when(jwtService.extractUserId(MOCK_TOKEN)).thenReturn(null);
 
         mockMvc.perform(get("/api/order/admin")
-                        .param("status", "SHIPPED"))
-                .andExpect(status().isOk());
-    }
-    @Test
-    void shouldReturnOrdersByStatusWithEmptyList() throws Exception {
-        when(adminService.getAllOrders()).thenReturn(Optional.empty());
-
-        mockMvc.perform(get("/api/order/admin")
-                        .param("status", "SHIPPED"))
-                .andExpect(status().isOk());
-    }
-    @Test
-    void shouldReturnOrdersByStatusWithNoOrders() throws Exception {
-        when(adminService.getAllOrders()).thenReturn(Optional.of(List.of()));
-
-        mockMvc.perform(get("/api/order/admin")
-                        .param("status", "SHIPPED"))
-                .andExpect(status().isOk());
+                        .header("Authorization", MOCK_AUTH_HEADER))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value("Invalid token or admin ID not found in token"))
+                .andExpect(jsonPath("$.error").value("Bad Request"));
     }
 }
