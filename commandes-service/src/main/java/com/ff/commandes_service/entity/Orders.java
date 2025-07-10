@@ -22,6 +22,7 @@ public class Orders {
     private Long productId;
     @Column(name = "user_id", nullable = false)
     private Long userId;
+    private Long adminId;
     @Column(nullable = false)
     private int quantity;
     @Column(nullable = false, precision = 10, scale = 2)
