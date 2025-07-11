@@ -1,5 +1,6 @@
 package com.ff.commandes_service.controller;
 
+import com.ff.commandes_service.dto.CountOrdersResponse;
 import com.ff.commandes_service.dto.OrderStatusRequest;
 import com.ff.commandes_service.entity.Orders;
 import com.ff.commandes_service.security.JwtService;
@@ -30,16 +31,13 @@ public class AdminController {
 
     }
     @GetMapping("/count")
-    public long countOrders() {
-        return adminService.countOrders();
+    public CountOrdersResponse countOrders(HttpServletRequest request) {
+        Long adminId = getAdminIdFromToken(request);
+        return adminService.countOrders(adminId);
     }
     @GetMapping("/count/status")
     public long countOrdersByStatus(String status) {
         return adminService.countOrdersByStatus(status);
-    }
-    @GetMapping("/count/all")
-    public long countAllOrders() {
-        return adminService.countAllOrders();
     }
     @GetMapping("/{id}")
     public ResponseEntity<Optional<Orders>> getOrderByIdByAdmin(@PathVariable Long id, HttpServletRequest request) {

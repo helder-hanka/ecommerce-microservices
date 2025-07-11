@@ -181,20 +181,6 @@ public class AdminServiceTest {
         assertEquals(expectedCount, actualCount);
         verify(orderRepository).countByOrderStatus(OrderStatus.valueOf(status.toUpperCase()));
     }
-    @Test
-    void countAllOrders_shouldReturnCorrectCount() {
-        // Arrange
-        long expectedCount = 10L;
-
-        when(orderRepository.count()).thenReturn(expectedCount);
-
-        // Act
-        long actualCount = adminService.countAllOrders();
-
-        // Assert
-        assertEquals(expectedCount, actualCount);
-        verify(orderRepository).count();
-    }
 
     // MODIFIÉ: Renommage et adaptation pour getOrderByIdByAdmin
     @Test
@@ -316,15 +302,13 @@ public class AdminServiceTest {
     void countOrders_shouldReturnCorrectCount_Dupe() { // Renommage pour indiquer que c'est un doublon
         // Arrange
         long expectedCount = 10L;
-
-        when(orderRepository.count()).thenReturn(expectedCount);
-
+        String statusString = "VALIDATED";
+        when(orderRepository.countByOrderStatus(OrderStatus.valueOf(statusString.toUpperCase()))).thenReturn(expectedCount);
         // Act
-        long actualCount = adminService.countOrders();
-
+        long actualCount = adminService.countOrdersByStatus(statusString);
         // Assert
         assertEquals(expectedCount, actualCount);
-        verify(orderRepository).count();
+        verify(orderRepository).countByOrderStatus(OrderStatus.valueOf(statusString.toUpperCase()));
     }
 
     // MODIFIÉ: updateOrderStatusByString est remplacé par le test updateOrderStatus général

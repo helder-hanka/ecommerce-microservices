@@ -2,6 +2,7 @@ package com.ff.commandes_service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ff.commandes_service.controller.AdminController;
+import com.ff.commandes_service.dto.CountOrdersResponse;
 import com.ff.commandes_service.dto.OrderStatusRequest;
 import com.ff.commandes_service.entity.OrderStatus;
 import com.ff.commandes_service.entity.Orders;
@@ -90,11 +91,24 @@ public class AdminControllerTest {
 
     @Test
     void shouldReturnOrderCount() throws Exception {
-        when(adminService.countOrders()).thenReturn(5L);
+        // Create a mock response object
+        CountOrdersResponse mockRes = new CountOrdersResponse();
+        mockRes.setTotalOrders(10L);
+        mockRes.setPendingOrders(3L);
+        mockRes.setCompletedOrders(5L);
+        mockRes.setCancelledOrders(2L);
 
-        mockMvc.perform(get("/api/order/admin/count"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(5L));
+        // Mock the jwtService to return the admin ID
+        when(jwtService.extractUserId(MOCK_TOKEN)).thenReturn(TEST_ADMIN_ID);
+        // Mock the adminService to return the mock response
+        when(adminService.countOrders(TEST_ADMIN_ID)).thenReturn(mockRes);
+        mockMvc.perform(get("/api/order/admin/count")
+                .header("Authorization", MOCK_AUTH_HEADER))
+                        .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.totalOrders").value(mockRes.getTotalOrders()))
+                                        .andExpect(jsonPath("$.pendingOrders").value(mockRes.getPendingOrders()))
+                                                .andExpect(jsonPath("$.completedOrders").value(mockRes.getCompletedOrders()))
+                                                        .andExpect(jsonPath("$.cancelledOrders").value(mockRes.getCancelledOrders()));
     }
 
     @Test
@@ -105,15 +119,6 @@ public class AdminControllerTest {
                         .param("status", "SHIPPED")) // <-- N'oubliez pas .param pour les @RequestParam
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(3L));
-    }
-
-    @Test
-    void shouldReturnAllOrderCount() throws Exception {
-        when(adminService.countAllOrders()).thenReturn(10L);
-
-        mockMvc.perform(get("/api/order/admin/count/all"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(10L));
     }
 
     @Test

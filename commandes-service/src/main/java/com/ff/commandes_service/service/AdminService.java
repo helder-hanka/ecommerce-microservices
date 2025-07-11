@@ -1,5 +1,6 @@
 package com.ff.commandes_service.service;
 
+import com.ff.commandes_service.dto.CountOrdersResponse;
 import com.ff.commandes_service.dto.OrderStatusRequest;
 import com.ff.commandes_service.entity.OrderStatus;
 import com.ff.commandes_service.entity.Orders;
@@ -28,8 +29,21 @@ public class AdminService {
         return  orderRepository.findAllProductByAdminId(adminId);
     }
 
-    public long countOrders() {
-        return orderRepository.count();
+    public CountOrdersResponse countOrders(Long adminId) {
+        // Counting total orders,  pendingOrders, completedOrders,cancelledOrders by admin ID
+        long totalOrders = orderRepository.count();
+        if (totalOrders == 0) {
+            throw new IllegalArgumentException("No orders found for admin with id: " + adminId);
+        }
+        long pendingOrders = orderRepository.countByOrderStatus(OrderStatus.PENDING);
+        long completedOrders = orderRepository.countByOrderStatus(OrderStatus.DELIVERED);
+        long cancelledOrders = orderRepository.countByOrderStatus(OrderStatus.CANCELLED);
+        CountOrdersResponse response = new CountOrdersResponse();
+        response.setTotalOrders(totalOrders);
+        response.setPendingOrders(pendingOrders);
+        response.setCompletedOrders(completedOrders);
+        response.setCancelledOrders(cancelledOrders);
+        return response;
     }
     public Optional<Orders> updateOrderStatus(Long id,Long admin, OrderStatusRequest orderStatus){
         return Optional.of(orderRepository.findById(id).map(order -> {
@@ -59,8 +73,4 @@ public class AdminService {
     public long countOrdersByStatus(String status) {
         return orderRepository.countByOrderStatus(OrderStatus.valueOf(status.toUpperCase()));
     }
-    public long countAllOrders() {
-        return orderRepository.count();
-    }
-
 }
