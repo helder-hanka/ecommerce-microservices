@@ -22,7 +22,7 @@ spring:
             - id: commandes-service
               uri: lb://commandes-service
               predicates:
-                - Path=/api/commandes/**
+                - Path=/api/order/**
 
             - id: product-service-private
               uri: lb://product-service
