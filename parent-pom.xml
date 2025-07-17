@@ -15,7 +15,7 @@
         <module>payments-service</module>
         <module>product-service</module>
         <module>eureka-server</module>
-        <!--<module>api-gateway</module> -->
+        <module>api-gateway</module>
     </modules>
 
     <dependencyManagement>
