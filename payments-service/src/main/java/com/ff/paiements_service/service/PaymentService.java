@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -14,14 +13,11 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
 
-    public Payment findPaymentById(Long paymentId) {
-        return paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new IllegalArgumentException("Payment not found with id: " + paymentId));
+    public Payment findPaymentById(Long id) {
+        return paymentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Payment not found with id: " + id));
     }
     public List <Payment> getAllPaymentsByUserId(Long userId) {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null");
-        }
         List<Payment> payments = paymentRepository.findByUserId(userId);
         if (payments.isEmpty()) {
             throw new IllegalArgumentException("No payments found for user with ID: " + userId);

@@ -33,10 +33,10 @@ spring:
               predicates:
                 - Path=/api/public/products/**
 
-            - id: payments-service
-              uri: lb://payments-service
+            - id: paiements-service
+              uri: lb://paiements-service
               predicates:
-                - Path=/api/paiements/**
+                - Path=/api/payments/**
   # AJOUT DE LA CLÉ SECRÈTE JWT ICI
   security:
     jwt:

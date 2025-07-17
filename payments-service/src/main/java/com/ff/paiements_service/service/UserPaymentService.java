@@ -16,16 +16,16 @@ public class UserPaymentService {
 
     private final PaymentRepository paymentRepository;
 
-    public Payment createPayment(PaymentPostRequest paymentRequest) {
+    public Payment createPayment(Long userId, PaymentPostRequest paymentRequest) {
         if (paymentRequest.getAmount() == null || paymentRequest.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("Payment amount must be greater than zero");
         }
         var payment = Payment.builder()
-                .userId(paymentRequest.getUserId())
+                .userId(userId)
                 .orderId(paymentRequest.getOrderId())
                 .paymentMethod(paymentRequest.getPaymentMethod())
                 .amount(paymentRequest.getAmount())
-                .paymentStatus(PaymentStatus.PENDING)
+                .paymentStatus(paymentRequest.getPaymentStatus())
                 .paymentDate(LocalDateTime.now())
                 .build();
         return paymentRepository.save(payment);

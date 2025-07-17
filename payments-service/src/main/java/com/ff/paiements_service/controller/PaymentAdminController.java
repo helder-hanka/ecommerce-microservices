@@ -13,7 +13,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/admin/payments/order")
+@RequestMapping("/api/payments/admin")
 public class PaymentAdminController {
     private final AdminPaymentService adminPaymentService;
     private final PaymentService paymentService;

@@ -6,33 +6,42 @@ import com.ff.paiements_service.dto.PaymentPostRequest;
 import com.ff.paiements_service.entity.Payment;
 import com.ff.paiements_service.entity.PaymentMethod;
 import com.ff.paiements_service.entity.PaymentStatus;
+import com.ff.paiements_service.security.JwtService;
 import com.ff.paiements_service.service.PaymentService;
 import com.ff.paiements_service.service.UserPaymentService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections; // Ajouté
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
+// Import statique pour with(user(...)) et with(csrf())
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 @WebMvcTest(PaymentUserController.class)
 @Import(PaymentUserControllerTest.MockServiceConfig.class)
+// @Import({PaymentUserControllerTest.MockServiceConfig.class, SecurityConfig.class}) // Si vous avez une WebSecurityConfig à importer
 public class PaymentUserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -47,6 +56,8 @@ public class PaymentUserControllerTest {
     private PaymentService paymentService;
 
     private Payment mockPayment;
+    private final Long TEST_USER_ID = 1L;
+    private final String TEST_USER_ROLE = "USER";
 
     @TestConfiguration
     static class MockServiceConfig {
@@ -59,35 +70,74 @@ public class PaymentUserControllerTest {
         public PaymentService paymentService() {
             return Mockito.mock(PaymentService.class);
         }
+
+        @Bean
+        public JwtService jwtService() {
+            return Mockito.mock(JwtService.class);
+        }
     }
 
     @BeforeEach
     void setUp() {
         mockPayment = Payment.builder()
                 .id(1L)
-                .userId(1L)
+                .userId(TEST_USER_ID)
                 .orderId(101L)
                 .paymentMethod(PaymentMethod.BANK_CARD)
                 .amount(BigDecimal.valueOf(100.00))
                 .paymentStatus(PaymentStatus.PENDING)
                 .paymentDate(LocalDateTime.now())
                 .build();
+
+        // Simuler l'authentification avec un rôle
+        // C'est la méthode manuelle, mais pour @WebMvcTest, `with(user(...))` est plus idiomatique
+        // UsernamePasswordAuthenticationToken authentication =
+        //         new UsernamePasswordAuthenticationToken(
+        //                 "testuser@example.com", TEST_USER_ID,
+        //                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + TEST_USER_ROLE))
+        //         );
+        // SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
+    @AfterEach
+    void tearDown() {
+        SecurityContextHolder.clearContext();
+    }
+    // --- Corrected Utility Method for User Authentication ---
+    private RequestPostProcessor authenticatedUserWithUserId(String username, Long userId, String role) {
+        // Create the authorities list
+        List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + role));
+
+        // Create a UserDetails object (the principal)
+        User principal = new User(username, "password", authorities); // Password can be anything, it's not used here
+
+        // Create the UsernamePasswordAuthenticationToken manually,
+        // putting the userId directly into the 'credentials' field as expected by your JwtAuthenticationFilter
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(principal, userId, authorities);
+
+        // Return a RequestPostProcessor that sets this authentication object
+        return SecurityMockMvcRequestPostProcessors.authentication(authentication);
+    }
+
 
     @Test
     void createPayment_ShouldReturnPayment() throws Exception {
         PaymentPostRequest request = new PaymentPostRequest();
-        request.setUserId(1L);
         request.setOrderId(101L);
         request.setAmount(BigDecimal.valueOf(100.00));
         request.setPaymentMethod(PaymentMethod.BANK_CARD);
+        request.setPaymentStatus(PaymentStatus.PENDING);
 
-        // Mock du service
-        Mockito.when(userPaymentService.createPayment(any())).thenReturn(mockPayment);
+        when(userPaymentService.createPayment(eq(TEST_USER_ID), any(PaymentPostRequest.class))).thenReturn(mockPayment);
 
-        mockMvc.perform(post("/api/user/payments/order")
+        mockMvc.perform(post("/api/user/payments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(request))
+                        .with(csrf())
+                        // Utilise notre méthode utilitaire pour simuler l'utilisateur
+                        .with(authenticatedUserWithUserId("testuser", TEST_USER_ID, TEST_USER_ROLE))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(mockPayment.getId()))
                 .andExpect(jsonPath("$.userId").value(mockPayment.getUserId()))
@@ -95,41 +145,50 @@ public class PaymentUserControllerTest {
                 .andExpect(jsonPath("$.amount").value(mockPayment.getAmount().doubleValue()))
                 .andExpect(jsonPath("$.paymentStatus").value(mockPayment.getPaymentStatus().name()))
                 .andExpect(jsonPath("$.paymentMethod").value(mockPayment.getPaymentMethod().name()));
-    }
-    @Test
-    void getUserPayments_ShouldReturnPayment() throws Exception {
-        Long userId = 1L;
-        when(paymentService.getAllPaymentsByUserId(userId)).thenReturn(List.of(mockPayment));
 
-        mockMvc.perform(get("/api/user/payments/order/user/{userId}/all", userId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(mockPayment.getId()))
-                .andExpect(jsonPath("$[0].userId").value(mockPayment.getUserId()))
-                .andExpect(jsonPath("$[0].orderId").value(mockPayment.getOrderId()))
-                .andExpect(jsonPath("$[0].amount").value(mockPayment.getAmount().doubleValue()))
-                .andExpect(jsonPath("$[0].paymentStatus").value(mockPayment.getPaymentStatus().name()))
-                .andExpect(jsonPath("$[0].paymentMethod").value(mockPayment.getPaymentMethod().name()));
+        verify(userPaymentService, times(1)).createPayment(eq(TEST_USER_ID), any(PaymentPostRequest.class));
     }
-    @Test
-    void getPaymentsByOrderId_ShouldReturnPayments() throws Exception {
-        Long orderId = 101L;
-        when(paymentService.getPaymentsByOrderId(orderId)).thenReturn(List.of(mockPayment));
 
-        mockMvc.perform(get("/api/user/payments/order/{orderId}/all", orderId))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(mockPayment.getId()))
-                .andExpect(jsonPath("$[0].userId").value(mockPayment.getUserId()))
-                .andExpect(jsonPath("$[0].orderId").value(mockPayment.getOrderId()))
-                .andExpect(jsonPath("$[0].amount").value(mockPayment.getAmount().doubleValue()))
-                .andExpect(jsonPath("$[0].paymentStatus").value(mockPayment.getPaymentStatus().name()))
-                .andExpect(jsonPath("$[0].paymentMethod").value(mockPayment.getPaymentMethod().name()));
+    @Test
+    void createPayment_InvalidAmount_ShouldReturnBadRequest() throws Exception {
+        PaymentPostRequest request = new PaymentPostRequest();
+        request.setOrderId(101L);
+        request.setAmount(BigDecimal.valueOf(0)); // Montant invalide
+        request.setPaymentMethod(PaymentMethod.BANK_CARD);
+
+        mockMvc.perform(post("/api/user/payments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .with(csrf()) // Nécessaire pour POST
+                        .with(user("testuser").password("pass").roles(TEST_USER_ROLE))
+                )
+                .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void createPayment_InvalidPaymentMethod_ShouldReturnBadRequest() throws Exception {
+        PaymentPostRequest request = new PaymentPostRequest();
+        request.setOrderId(101L);
+        request.setAmount(BigDecimal.valueOf(100.00));
+        request.setPaymentMethod(null); // Méthode de paiement invalide
+
+        mockMvc.perform(post("/api/user/payments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request))
+                        .with(csrf()) // Nécessaire pour POST
+                        .with(user("testuser").password("pass").roles(TEST_USER_ROLE))
+                )
+                .andExpect(status().isBadRequest());
+    }
+
     @Test
     void getPaymentById_ShouldReturnPayment() throws Exception {
         Long paymentId = 1L;
         when(paymentService.findPaymentById(paymentId)).thenReturn(mockPayment);
 
-        mockMvc.perform(get("/api/user/payments/order/{id}", paymentId))
+        mockMvc.perform(get("/api/user/payments/{id}", paymentId)
+                        .with(user("testuser").password("pass").roles(TEST_USER_ROLE)) // Simule l'utilisateur pour GET
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(mockPayment.getId()))
                 .andExpect(jsonPath("$.userId").value(mockPayment.getUserId()))
@@ -137,31 +196,44 @@ public class PaymentUserControllerTest {
                 .andExpect(jsonPath("$.amount").value(mockPayment.getAmount().doubleValue()))
                 .andExpect(jsonPath("$.paymentStatus").value(mockPayment.getPaymentStatus().name()))
                 .andExpect(jsonPath("$.paymentMethod").value(mockPayment.getPaymentMethod().name()));
-    }
-    @Test
-    void createPayment_InvalidAmount_ShouldReturnBadRequest() throws Exception {
-        PaymentPostRequest request = new PaymentPostRequest();
-        request.setUserId(1L);
-        request.setOrderId(101L);
-        request.setAmount(BigDecimal.valueOf(0)); // Montant invalide
-        request.setPaymentMethod(PaymentMethod.BANK_CARD);
 
-        mockMvc.perform(post("/api/user/payments/order")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+        verify(paymentService, times(1)).findPaymentById(paymentId);
     }
-    @Test
-    void createPayment_InvalidPaymentMethod_ShouldReturnBadRequest() throws Exception {
-        PaymentPostRequest request = new PaymentPostRequest();
-        request.setUserId(1L);
-        request.setOrderId(101L);
-        request.setAmount(BigDecimal.valueOf(100.00));
-        request.setPaymentMethod(null); // Méthode de paiement invalide
 
-        mockMvc.perform(post("/api/user/payments/order")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+    @Test
+    void getAllPaymentsForCurrentUser_ShouldReturnPayments() throws Exception {
+        when(paymentService.getAllPaymentsByUserId(TEST_USER_ID)).thenReturn(List.of(mockPayment));
+
+        mockMvc.perform(get("/api/user/payments")
+                        .with(authenticatedUserWithUserId("testUser", TEST_USER_ID, TEST_USER_ROLE)) // Simule l'utilisateur pour GET
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(mockPayment.getId()))
+                .andExpect(jsonPath("$[0].userId").value(mockPayment.getUserId()))
+                .andExpect(jsonPath("$[0].orderId").value(mockPayment.getOrderId()))
+                .andExpect(jsonPath("$[0].amount").value(mockPayment.getAmount().doubleValue()))
+                .andExpect(jsonPath("$[0].paymentStatus").value(mockPayment.getPaymentStatus().name()))
+                .andExpect(jsonPath("$[0].paymentMethod").value(mockPayment.getPaymentMethod().name()));
+
+        verify(paymentService, times(1)).getAllPaymentsByUserId(TEST_USER_ID);
+    }
+
+    @Test
+    void getPaymentsByOrderId_ShouldReturnPayments() throws Exception {
+        Long orderId = 101L;
+        when(paymentService.getPaymentsByOrderId(orderId)).thenReturn(List.of(mockPayment));
+
+        mockMvc.perform(get("/api/user/payments/{orderId}/all", orderId)
+                        .with(user("testuser").password("pass").roles(TEST_USER_ROLE)) // Simule l'utilisateur pour GET
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(mockPayment.getId()))
+                .andExpect(jsonPath("$[0].userId").value(mockPayment.getUserId()))
+                .andExpect(jsonPath("$[0].orderId").value(mockPayment.getOrderId()))
+                .andExpect(jsonPath("$[0].amount").value(mockPayment.getAmount().doubleValue()))
+                .andExpect(jsonPath("$[0].paymentStatus").value(mockPayment.getPaymentStatus().name()))
+                .andExpect(jsonPath("$[0].paymentMethod").value(mockPayment.getPaymentMethod().name()));
+
+        verify(paymentService, times(1)).getPaymentsByOrderId(orderId);
     }
 }

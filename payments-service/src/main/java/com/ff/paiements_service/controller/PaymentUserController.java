@@ -6,6 +6,7 @@ import com.ff.paiements_service.service.PaymentService;
 import com.ff.paiements_service.service.UserPaymentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import com.ff.paiements_service.security.SecurityUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/user/payments/order")
+@RequestMapping("/api/payments/user")
 public class PaymentUserController {
 
     private final UserPaymentService userPaymentService;
@@ -21,18 +22,21 @@ public class PaymentUserController {
 
     @PostMapping
     public ResponseEntity <Payment> createPayment(@Valid @RequestBody PaymentPostRequest paymentPostRequest) {
-        Payment pPostR = userPaymentService.createPayment(paymentPostRequest);
+        Long userId = SecurityUtils.getCurrentUserId();
+        Payment pPostR = userPaymentService.createPayment(userId, paymentPostRequest);
         return ResponseEntity.ok(pPostR);
     }
-     @GetMapping("/{id}")
+
+    @GetMapping("/{id}")
      public Payment getUserPayments(@PathVariable Long id) {
         return paymentService.findPaymentById(id);
     }
-    @GetMapping("/user/{userId}/all")
-    public List<Payment> getAllPayments(@PathVariable Long userId) {
+    @GetMapping
+    public List<Payment> getAllPayments() {
+        Long userId = SecurityUtils.getCurrentUserId();
         return paymentService.getAllPaymentsByUserId(userId);
     }
-    @GetMapping("/{orderId}/all")
+    @GetMapping("/orderId/{orderId}")
     public List<Payment> getPaymentsByOrderId(@PathVariable Long orderId) {
         return paymentService.getPaymentsByOrderId(orderId);
     }

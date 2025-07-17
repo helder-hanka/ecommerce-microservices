@@ -10,10 +10,10 @@ import java.math.BigDecimal;
 
 @Data
 public class PaymentPostRequest {
-    @NotNull(message = "User ID cannot be null")
-    private Long userId;
     @NotNull(message = "Order ID cannot be null")
     private Long orderId;
+    @NotNull(message = "Payment Status cannot be null")
+    private PaymentStatus paymentStatus;
     @NotNull(message = "Payment Method cannot be null")
     private PaymentMethod PaymentMethod;
     @DecimalMin(value = "0.01", message = "Amount must be greater than zero")
