@@ -2,6 +2,7 @@ package com.ff.paiements_service.controller;
 
 import com.ff.paiements_service.dto.PaymentStatusPutRequest;
 import com.ff.paiements_service.entity.Payment;
+import com.ff.paiements_service.security.SecurityUtils;
 import com.ff.paiements_service.service.AdminPaymentService;
 import com.ff.paiements_service.service.PaymentService;
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -27,16 +29,17 @@ public class PaymentAdminController {
     public Payment getPaymentById(@PathVariable Long paymentId) {
         return paymentService.findPaymentById(paymentId);
     }
-    @GetMapping("/{userId}/all")
-    public List<Payment> getAllPaymentsByUserId(@PathVariable Long userId) {
-        return paymentService.getAllPaymentsByUserId(userId);
+    @GetMapping
+    public List<Payment> getAllPaymentsByAdminId() {
+        Long adminId = SecurityUtils.getCurrentUserId();
+        return adminPaymentService.getAllPaymentsByAdminId(adminId);
     }
-    @GetMapping("/{orderId}")
-    public List<Payment> getPaymentsByOrderId(@PathVariable Long orderId) {
-        return paymentService.getPaymentsByOrderId(orderId);
-    }
-    @GetMapping("/all")
-    public List<Payment> getAllPayments() {
-        return adminPaymentService.getAllPayments();
+    @GetMapping("orderId/{orderId}")
+    public Optional<Payment> getPaymentsByOrderId(@PathVariable Long orderId) {
+        if (orderId == null) {
+            throw new IllegalArgumentException("Order ID cannot be null");
+        }
+         Long adminId = SecurityUtils.getCurrentUserId();
+        return adminPaymentService.getPaymentsByOrderIdByAdminId(orderId, adminId);
     }
 }

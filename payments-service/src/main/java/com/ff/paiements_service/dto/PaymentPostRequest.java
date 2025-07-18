@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 public class PaymentPostRequest {
     @NotNull(message = "Order ID cannot be null")
     private Long orderId;
+    @NotNull(message = "User ID cannot be null")
+    private Long adminId;
     @NotNull(message = "Payment Status cannot be null")
     private PaymentStatus paymentStatus;
     @NotNull(message = "Payment Method cannot be null")

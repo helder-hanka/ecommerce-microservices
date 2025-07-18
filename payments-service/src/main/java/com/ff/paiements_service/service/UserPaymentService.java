@@ -22,6 +22,7 @@ public class UserPaymentService {
         }
         var payment = Payment.builder()
                 .userId(userId)
+                .adminId(paymentRequest.getAdminId())
                 .orderId(paymentRequest.getOrderId())
                 .paymentMethod(paymentRequest.getPaymentMethod())
                 .amount(paymentRequest.getAmount())

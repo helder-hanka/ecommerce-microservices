@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -28,5 +30,20 @@ public class AdminPaymentService {
             throw new IllegalArgumentException("No payments found");
         }
         return payments;
+    }
+    public List <Payment> getAllPaymentsByAdminId(Long adminId) {
+        List<Payment> payments = paymentRepository.findByAdminId(adminId);
+        if (payments.isEmpty()) {
+            throw new IllegalArgumentException("No payments found for Admin with ID: " + adminId);
+        }
+        return payments;
+    }
+
+    public Optional<Payment> getPaymentsByOrderIdByAdminId(Long orderId, Long adminId) {
+        Optional<Payment> payment= paymentRepository.findByOrderIdAndAdminId(orderId, adminId);
+        if (payment.isEmpty()) {
+            throw new IllegalArgumentException("No payments found for order with ID: " + orderId + " for admin with ID: " + adminId);
+        }
+        return payment;
     }
 }

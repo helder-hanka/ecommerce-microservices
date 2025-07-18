@@ -4,27 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de07dcb3-e15d-4895-bf72-ec27dd8f2a0d" name="Changes" comment="Mise à jour class, methos">
-      <change afterPath="$PROJECT_DIR$/api-gateway/src/main/java/com/ff/api_gateway/security/JwtSecurityContextRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/security/CustomAccessDeniedHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/security/CustomAuthenticationEntryPoint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/security/JwtService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/security/SecurityUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+    <list default="true" id="de07dcb3-e15d-4895-bf72-ec27dd8f2a0d" name="Changes" comment="Mise en place dossier parent et ajout de modules">
+      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/exception/ErrorResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/handler/GlobalExceptionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/api-gateway/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parent-pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/parent-pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/controller/PaymentAdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/controller/PaymentAdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/controller/PaymentUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/controller/PaymentUserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/dto/PaymentPostRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/dto/PaymentPostRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/security/JwtAuthenticationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/security/JwtAuthenticationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/PaymentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/entity/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/entity/Payment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/repository/PaymentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/repository/PaymentRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/AdminPaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/AdminPaymentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/UserPaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/UserPaymentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments-service/src/test/java/com/ff/paiements_service/PaymentUserControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/test/java/com/ff/paiements_service/PaymentUserControllerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +89,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "feture/gateway",
-    "last_opened_file_path": "/Users/helder/Developpement/ecommerce-microservices/payments-service/src/main/java/com/ff/paiements_service/security",
+    "last_opened_file_path": "/Users/helder/Developpement/ecommerce-microservices/payments-service/src/main/java/com/ff/paiements_service",
     "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
   }
 }]]></component>
@@ -109,9 +98,9 @@
       <recent name="com.ff.api_gateway.config" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service" />
       <recent name="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/security" />
       <recent name="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service" />
-      <recent name="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="ExtractSuperBase.RECENT_KEYS">
@@ -121,7 +110,7 @@
       <recent name="com.ff.api_gateway.security" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.PaymentUserControllerTest">
+  <component name="RunManager" selected="Application.Gateway">
     <configuration name="Client-service" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.ff.clients_service.ClientsServiceApplication" />
       <module name="clients-service" />
@@ -597,13 +586,34 @@
       <option name="project" value="LOCAL" />
       <updated>1752681203523</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Mise à jour et connexion avec api-gateway">
+      <option name="closed" value="true" />
+      <created>1752766640998</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1752766640998</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Ajout JwtSecurityContextRepository pour la prochaine étape de faire en sorte que gate-way gére le token et envoie userId, role vers les autres services">
+      <option name="closed" value="true" />
+      <created>1752766750632</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1752766750632</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Mise en place dossier parent et ajout de modules">
+      <option name="closed" value="true" />
+      <created>1752766925603</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1752766925603</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Mise à jour de class entity Profile, security, AuthService, AuthController" />
-    <MESSAGE value="Mise à jour path product-service" />
-    <MESSAGE value="Mise à jour product-service complet" />
     <MESSAGE value="Mise en relation api-gateway et product-service + Mise à jour class" />
     <MESSAGE value="Mise à jour methods getAllOrders, getOrdersById, updateOrderStatus,updateOrderStatusByString et création method getAdminIdFromToken,isOrderAdmin" />
     <MESSAGE value="Mise à jour class AdminControllerTest" />
@@ -626,6 +636,9 @@
     <MESSAGE value="enlever Comments le role user" />
     <MESSAGE value="Ajout : CustomAccessDeniedHandler, CustomAuthenticationEntryPoint" />
     <MESSAGE value="Mise à jour class, methos" />
-    <option name="LAST_COMMIT_MESSAGE" value="Mise à jour class, methos" />
+    <MESSAGE value="Mise à jour et connexion avec api-gateway" />
+    <MESSAGE value="Ajout JwtSecurityContextRepository pour la prochaine étape de faire en sorte que gate-way gére le token et envoie userId, role vers les autres services" />
+    <MESSAGE value="Mise en place dossier parent et ajout de modules" />
+    <option name="LAST_COMMIT_MESSAGE" value="Mise en place dossier parent et ajout de modules" />
   </component>
 </project>
