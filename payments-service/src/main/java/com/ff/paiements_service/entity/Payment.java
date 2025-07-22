@@ -28,6 +28,8 @@ public class Payment {
     private Long orderId;
     @Convert(converter = PaymentMethodConverter.class)
     private PaymentMethod paymentMethod;
+    @Column(nullable = false)
+    private String transactionId; // ID de transaction de la passerelle de paiement
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
     @Convert(converter = PayementStatusConverter.class)

@@ -16,7 +16,7 @@ public class ErrorResponse {
     private final String timestamp;
 
     // Constructeur(s), getters et setters
-    public ErrorResponse(int status, String error, String message, String path) {
+    public ErrorResponse(int status, String error, String message, String path, LocalDateTime now) {
         this.status = status;
         this.error = error;
         this.message = message;

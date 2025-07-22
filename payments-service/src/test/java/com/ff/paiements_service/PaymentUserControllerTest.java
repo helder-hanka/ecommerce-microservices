@@ -32,16 +32,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections; // Ajouté
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-// Import statique pour with(user(...)) et with(csrf())
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 
 @WebMvcTest(PaymentUserController.class)
 @Import(PaymentUserControllerTest.MockServiceConfig.class)
-// @Import({PaymentUserControllerTest.MockServiceConfig.class, SecurityConfig.class}) // Si vous avez une WebSecurityConfig à importer
 public class PaymentUserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -125,13 +124,14 @@ public class PaymentUserControllerTest {
     void createPayment_ShouldReturnPayment() throws Exception {
         PaymentPostRequest request = new PaymentPostRequest();
         request.setOrderId(101L);
+        request.setAdminId(1L);
         request.setAmount(BigDecimal.valueOf(100.00));
         request.setPaymentMethod(PaymentMethod.BANK_CARD);
         request.setPaymentStatus(PaymentStatus.PENDING);
 
         when(userPaymentService.createPayment(eq(TEST_USER_ID), any(PaymentPostRequest.class))).thenReturn(mockPayment);
 
-        mockMvc.perform(post("/api/user/payments")
+        mockMvc.perform(post("/api/payments/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .with(csrf())
@@ -141,6 +141,8 @@ public class PaymentUserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(mockPayment.getId()))
                 .andExpect(jsonPath("$.userId").value(mockPayment.getUserId()))
+                .andExpect(jsonPath("$.adminId").value(mockPayment.getAdminId()))
+                .andExpect(jsonPath("$.transactionId").value(mockPayment.getTransactionId()))
                 .andExpect(jsonPath("$.orderId").value(mockPayment.getOrderId()))
                 .andExpect(jsonPath("$.amount").value(mockPayment.getAmount().doubleValue()))
                 .andExpect(jsonPath("$.paymentStatus").value(mockPayment.getPaymentStatus().name()))
@@ -153,10 +155,12 @@ public class PaymentUserControllerTest {
     void createPayment_InvalidAmount_ShouldReturnBadRequest() throws Exception {
         PaymentPostRequest request = new PaymentPostRequest();
         request.setOrderId(101L);
+        request.setAdminId(1L);
         request.setAmount(BigDecimal.valueOf(0)); // Montant invalide
         request.setPaymentMethod(PaymentMethod.BANK_CARD);
+        request.setPaymentStatus(PaymentStatus.PENDING);
 
-        mockMvc.perform(post("/api/user/payments")
+        mockMvc.perform(post("/api/payments/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .with(csrf()) // Nécessaire pour POST
@@ -169,10 +173,12 @@ public class PaymentUserControllerTest {
     void createPayment_InvalidPaymentMethod_ShouldReturnBadRequest() throws Exception {
         PaymentPostRequest request = new PaymentPostRequest();
         request.setOrderId(101L);
+        request.setAdminId(123L);
         request.setAmount(BigDecimal.valueOf(100.00));
+        request.setPaymentStatus(PaymentStatus.PENDING);
         request.setPaymentMethod(null); // Méthode de paiement invalide
 
-        mockMvc.perform(post("/api/user/payments")
+        mockMvc.perform(post("/api/payments/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request))
                         .with(csrf()) // Nécessaire pour POST
@@ -186,17 +192,18 @@ public class PaymentUserControllerTest {
         Long paymentId = 1L;
         when(paymentService.findPaymentById(paymentId)).thenReturn(mockPayment);
 
-        mockMvc.perform(get("/api/user/payments/{id}", paymentId)
+        mockMvc.perform(get("/api/payments/user/{id}", paymentId)
                         .with(user("testuser").password("pass").roles(TEST_USER_ROLE)) // Simule l'utilisateur pour GET
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(mockPayment.getId()))
-                .andExpect(jsonPath("$.userId").value(mockPayment.getUserId()))
-                .andExpect(jsonPath("$.orderId").value(mockPayment.getOrderId()))
-                .andExpect(jsonPath("$.amount").value(mockPayment.getAmount().doubleValue()))
-                .andExpect(jsonPath("$.paymentStatus").value(mockPayment.getPaymentStatus().name()))
-                .andExpect(jsonPath("$.paymentMethod").value(mockPayment.getPaymentMethod().name()));
-
+                        .andExpectAll(jsonPath("$.id").value(mockPayment.getId()),
+                                jsonPath("$.userId").value(mockPayment.getUserId()),
+                                jsonPath("$.orderId").value(mockPayment.getOrderId()),
+                                jsonPath("$.adminId").value(mockPayment.getAdminId()),
+                                jsonPath("$.transactionId").value(mockPayment.getTransactionId()),
+                                jsonPath("$.amount").value(mockPayment.getAmount().doubleValue()),
+                                jsonPath("$.paymentStatus").value(mockPayment.getPaymentStatus().name()),
+                                jsonPath("$.paymentMethod").value(mockPayment.getPaymentMethod().name()));
         verify(paymentService, times(1)).findPaymentById(paymentId);
     }
 
@@ -204,7 +211,7 @@ public class PaymentUserControllerTest {
     void getAllPaymentsForCurrentUser_ShouldReturnPayments() throws Exception {
         when(paymentService.getAllPaymentsByUserId(TEST_USER_ID)).thenReturn(List.of(mockPayment));
 
-        mockMvc.perform(get("/api/user/payments")
+        mockMvc.perform(get("/api/payments/user")
                         .with(authenticatedUserWithUserId("testUser", TEST_USER_ID, TEST_USER_ROLE)) // Simule l'utilisateur pour GET
                 )
                 .andExpect(status().isOk())
@@ -221,19 +228,23 @@ public class PaymentUserControllerTest {
     @Test
     void getPaymentsByOrderId_ShouldReturnPayments() throws Exception {
         Long orderId = 101L;
-        when(paymentService.getPaymentsByOrderId(orderId)).thenReturn(List.of(mockPayment));
+        //when(paymentService.getPaymentsByOrderId(orderId)).thenReturn(List.of(mockPayment));
+        when(paymentService.getPaymentsByOrderId(orderId)).thenReturn(Optional.ofNullable(mockPayment));
 
-        mockMvc.perform(get("/api/user/payments/{orderId}/all", orderId)
+        mockMvc.perform(get("/api/payments/user/orderId/{orderId}", orderId)
                         .with(user("testuser").password("pass").roles(TEST_USER_ROLE)) // Simule l'utilisateur pour GET
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(mockPayment.getId()))
-                .andExpect(jsonPath("$[0].userId").value(mockPayment.getUserId()))
-                .andExpect(jsonPath("$[0].orderId").value(mockPayment.getOrderId()))
-                .andExpect(jsonPath("$[0].amount").value(mockPayment.getAmount().doubleValue()))
-                .andExpect(jsonPath("$[0].paymentStatus").value(mockPayment.getPaymentStatus().name()))
-                .andExpect(jsonPath("$[0].paymentMethod").value(mockPayment.getPaymentMethod().name()));
+                .andExpect(jsonPath("$.id").value(mockPayment.getId()))
+                .andExpect(jsonPath("$.userId").value(mockPayment.getUserId()))
+                .andExpect(jsonPath("$.adminId").value(mockPayment.getAdminId()))
+                .andExpect(jsonPath("$.transactionId").value(mockPayment.getTransactionId()))
+                .andExpect(jsonPath("$.orderId").value(mockPayment.getOrderId()))
+                .andExpect(jsonPath("$.amount").value(mockPayment.getAmount().doubleValue()))
+                .andExpect(jsonPath("$.paymentStatus").value(mockPayment.getPaymentStatus().name()))
+                .andExpect(jsonPath("$.paymentMethod").value(mockPayment.getPaymentMethod().name()));
 
         verify(paymentService, times(1)).getPaymentsByOrderId(orderId);
     }
+
 }

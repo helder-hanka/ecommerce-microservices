@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -37,7 +38,7 @@ public class PaymentUserController {
         return paymentService.getAllPaymentsByUserId(userId);
     }
     @GetMapping("/orderId/{orderId}")
-    public List<Payment> getPaymentsByOrderId(@PathVariable Long orderId) {
+    public Optional<Payment> getPaymentsByOrderId(@PathVariable Long orderId) {
         return paymentService.getPaymentsByOrderId(orderId);
     }
  }

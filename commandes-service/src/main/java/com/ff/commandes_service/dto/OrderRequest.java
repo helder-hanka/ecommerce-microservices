@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 @Data
 public class OrderRequest {
+    @NotNull(message = "User ID cannot be blank")
+    private Long adminId;
     @NotNull(message = "Product ID cannot be blank")
     private Long productId;
     @NotNull(message = "Quantity cannot be null")

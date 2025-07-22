@@ -1,5 +1,6 @@
 package com.ff.commandes_service.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ff.commandes_service.dto.OrderRequest;
 import com.ff.commandes_service.entity.OrderStatus;
 import com.ff.commandes_service.entity.Orders;
@@ -21,7 +22,7 @@ public class UserController {
     private  final JwtService jwtService;
 
     @PostMapping
-    public Orders createOrder(@Valid @RequestBody OrderRequest orders, HttpServletRequest request) {
+    public Orders createOrder(@Valid @RequestBody OrderRequest orders, HttpServletRequest request) throws JsonProcessingException {
         //Get userId from token
         Long userId = getUsersTokenAndVerifyIsExist(request);
         return userService.createOrder(userId, orders);

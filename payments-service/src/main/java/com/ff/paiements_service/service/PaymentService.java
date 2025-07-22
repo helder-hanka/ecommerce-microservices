@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -24,11 +25,11 @@ public class PaymentService {
         }
         return payments;
     }
-    public List<Payment> getPaymentsByOrderId(Long orderId) {
+    public Optional<Payment> getPaymentsByOrderId(Long orderId) {
         if (orderId == null) {
             throw new IllegalArgumentException("Order ID cannot be null");
         }
-        List<Payment> payments = paymentRepository.findByOrderId(orderId);
+        Optional<Payment> payments = paymentRepository.findByOrderId(orderId);
         if (payments.isEmpty()) {
             throw new IllegalArgumentException("No payments found for order with ID: " + orderId);
         }

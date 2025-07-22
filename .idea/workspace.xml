@@ -4,16 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de07dcb3-e15d-4895-bf72-ec27dd8f2a0d" name="Changes" comment="Mise en place dossier parent et ajout de modules">
-      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/exception/ErrorResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/handler/GlobalExceptionHandler.java" afterDir="false" />
+    <list default="true" id="de07dcb3-e15d-4895-bf72-ec27dd8f2a0d" name="Changes" comment="Mise à jour pour mettre en relation avec api-gateway">
+      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/OrderCreatedEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/PaymentSuccessEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/service/kafka/KafkaPaymentConsumer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/service/kafka/OrderKafkaProducer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/dto/OrderCreatedEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/dto/PaymentFailedEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/dto/PaymentInitiatedEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/dto/PaymentSuccessEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/kafka/KafkaOrderConsumer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/kafka/KafkaPaymentProducer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/controller/PaymentAdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/controller/PaymentAdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/dto/PaymentPostRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/dto/PaymentPostRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commandes-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/OrderRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/OrderRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/entity/Orders.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/entity/Orders.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/service/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/controller/PaymentUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/controller/PaymentUserController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/entity/Payment.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/entity/Payment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/exception/ErrorResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/exception/ErrorResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/handler/GlobalExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/handler/GlobalExceptionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/repository/PaymentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/repository/PaymentRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/AdminPaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/AdminPaymentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/PaymentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/UserPaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/java/com/ff/paiements_service/service/UserPaymentService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/test/java/com/ff/paiements_service/PaymentAdminControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/test/java/com/ff/paiements_service/PaymentAdminControllerTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/test/java/com/ff/paiements_service/PaymentServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/test/java/com/ff/paiements_service/PaymentServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/payments-service/src/test/java/com/ff/paiements_service/PaymentUserControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/payments-service/src/test/java/com/ff/paiements_service/PaymentUserControllerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,6 +98,17 @@
     "JUnit.AdminControllerTest.getAllOrdersByAdmin_shouldReturnAllOrders.executor": "Run",
     "JUnit.AdminServiceTest.countOrders_shouldReturnCorrectCount_Dupe.executor": "Run",
     "JUnit.AdminServiceTest.executor": "Run",
+    "JUnit.PaymentAdminControllerTest.executor": "Run",
+    "JUnit.PaymentAdminControllerTest.getAllPaymentsByAdminId_ShouldReturnPayments.executor": "Run",
+    "JUnit.PaymentAdminControllerTest.getAllPaymentsByUserId_ShouldReturnPayments.executor": "Run",
+    "JUnit.PaymentAdminControllerTest.getAllPayments_ShouldReturnAllPayments.executor": "Run",
+    "JUnit.PaymentAdminControllerTest.getPaymentById_Admin_ShouldReturnPayment.executor": "Run",
+    "JUnit.PaymentAdminControllerTest.getPaymentsByOrderId_Admin_ShouldReturnNotFoundWhenNoPaymentsFound.executor": "Run",
+    "JUnit.PaymentAdminControllerTest.getPaymentsByOrderId_Admin_ShouldReturnPayment.executor": "Run",
+    "JUnit.PaymentAdminControllerTest.updatePaymentStatus_ShouldReturnUpdatedPayment.executor": "Run",
+    "JUnit.PaymentServiceTest.executor": "Run",
+    "JUnit.PaymentServiceTest.findPaymentById_ShouldReturnPayment.executor": "Run",
+    "JUnit.PaymentServiceTest.getAllPaymentsByUserId_ShouldReturnPayments.executor": "Run",
     "JUnit.PaymentUserControllerTest.createPayment_ShouldReturnPayment.executor": "Run",
     "JUnit.PaymentUserControllerTest.executor": "Run",
     "JUnit.ProductsServiceApplicationTests.executor": "Run",
@@ -88,7 +120,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "feture/gateway",
+    "git-widget-placeholder": "feature/kafka",
     "last_opened_file_path": "/Users/helder/Developpement/ecommerce-microservices/payments-service/src/main/java/com/ff/paiements_service",
     "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices"
   }
@@ -107,10 +139,12 @@
       <recent name="com.ff.clients_service.security" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.ff.commandes_service.dto" />
+      <recent name="com.ff.paiements_service.dto" />
       <recent name="com.ff.api_gateway.security" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Gateway">
+  <component name="RunManager" selected="Application.Eureka-server">
     <configuration name="Client-service" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.ff.clients_service.ClientsServiceApplication" />
       <module name="clients-service" />
@@ -213,54 +247,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AdminControllerTest.getAllOrdersByAdmin_shouldReturnAllOrders" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="commandes-service" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.ff.commandes_service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.ff.commandes_service" />
-      <option name="MAIN_CLASS_NAME" value="com.ff.commandes_service.AdminControllerTest" />
-      <option name="METHOD_NAME" value="getAllOrdersByAdmin_shouldReturnAllOrders" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="AdminServiceTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="commandes-service" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.ff.commandes_service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.ff.commandes_service" />
-      <option name="MAIN_CLASS_NAME" value="com.ff.commandes_service.AdminServiceTest" />
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="AdminServiceTest.countOrders_shouldReturnCorrectCount_Dupe" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="commandes-service" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.ff.commandes_service.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.ff.commandes_service" />
-      <option name="MAIN_CLASS_NAME" value="com.ff.commandes_service.AdminServiceTest" />
-      <option name="METHOD_NAME" value="countOrders_shouldReturnCorrectCount_Dupe" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PaymentUserControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PaymentAdminControllerTest.getAllPaymentsByAdminId_ShouldReturnPayments" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="paiements-service" />
       <extension name="coverage">
         <pattern>
@@ -269,13 +256,14 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.ff.paiements_service" />
-      <option name="MAIN_CLASS_NAME" value="com.ff.paiements_service.PaymentUserControllerTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="MAIN_CLASS_NAME" value="com.ff.paiements_service.PaymentAdminControllerTest" />
+      <option name="METHOD_NAME" value="getAllPaymentsByAdminId_ShouldReturnPayments" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PaymentUserControllerTest.createPayment_ShouldReturnPayment" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="PaymentAdminControllerTest.getAllPaymentsByUserId_ShouldReturnPayments" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="paiements-service" />
       <extension name="coverage">
         <pattern>
@@ -284,8 +272,40 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.ff.paiements_service" />
-      <option name="MAIN_CLASS_NAME" value="com.ff.paiements_service.PaymentUserControllerTest" />
-      <option name="METHOD_NAME" value="createPayment_ShouldReturnPayment" />
+      <option name="MAIN_CLASS_NAME" value="com.ff.paiements_service.PaymentAdminControllerTest" />
+      <option name="METHOD_NAME" value="getAllPaymentsByUserId_ShouldReturnPayments" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PaymentAdminControllerTest.getPaymentById_Admin_ShouldReturnPayment" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="paiements-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ff.paiements_service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ff.paiements_service" />
+      <option name="MAIN_CLASS_NAME" value="com.ff.paiements_service.PaymentAdminControllerTest" />
+      <option name="METHOD_NAME" value="getPaymentById_Admin_ShouldReturnPayment" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PaymentAdminControllerTest.getPaymentsByOrderId_Admin_ShouldReturnPayment" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="paiements-service" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ff.paiements_service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ff.paiements_service" />
+      <option name="MAIN_CLASS_NAME" value="com.ff.paiements_service.PaymentAdminControllerTest" />
+      <option name="METHOD_NAME" value="getPaymentsByOrderId_Admin_ShouldReturnPayment" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -298,19 +318,17 @@
       <item itemvalue="Application.Product-service" />
       <item itemvalue="Application.Client-service" />
       <item itemvalue="Application.Gateway" />
-      <item itemvalue="JUnit.PaymentUserControllerTest" />
-      <item itemvalue="JUnit.PaymentUserControllerTest.createPayment_ShouldReturnPayment" />
-      <item itemvalue="JUnit.AdminControllerTest.getAllOrdersByAdmin_shouldReturnAllOrders" />
-      <item itemvalue="JUnit.AdminServiceTest.countOrders_shouldReturnCorrectCount_Dupe" />
-      <item itemvalue="JUnit.AdminServiceTest" />
+      <item itemvalue="JUnit.PaymentAdminControllerTest.getAllPaymentsByAdminId_ShouldReturnPayments" />
+      <item itemvalue="JUnit.PaymentAdminControllerTest.getAllPaymentsByUserId_ShouldReturnPayments" />
+      <item itemvalue="JUnit.PaymentAdminControllerTest.getPaymentById_Admin_ShouldReturnPayment" />
+      <item itemvalue="JUnit.PaymentAdminControllerTest.getPaymentsByOrderId_Admin_ShouldReturnPayment" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.PaymentUserControllerTest" />
-        <item itemvalue="JUnit.PaymentUserControllerTest.createPayment_ShouldReturnPayment" />
-        <item itemvalue="JUnit.AdminControllerTest.getAllOrdersByAdmin_shouldReturnAllOrders" />
-        <item itemvalue="JUnit.AdminServiceTest" />
-        <item itemvalue="JUnit.AdminServiceTest.countOrders_shouldReturnCorrectCount_Dupe" />
+        <item itemvalue="JUnit.PaymentAdminControllerTest.getPaymentsByOrderId_Admin_ShouldReturnPayment" />
+        <item itemvalue="JUnit.PaymentAdminControllerTest.getAllPaymentsByUserId_ShouldReturnPayments" />
+        <item itemvalue="JUnit.PaymentAdminControllerTest.getPaymentById_Admin_ShouldReturnPayment" />
+        <item itemvalue="JUnit.PaymentAdminControllerTest.getAllPaymentsByAdminId_ShouldReturnPayments" />
       </list>
     </recent_temporary>
   </component>
@@ -610,11 +628,18 @@
       <option name="project" value="LOCAL" />
       <updated>1752766925603</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Mise à jour pour mettre en relation avec api-gateway">
+      <option name="closed" value="true" />
+      <created>1752832883601</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1752832883601</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Mise en relation api-gateway et product-service + Mise à jour class" />
     <MESSAGE value="Mise à jour methods getAllOrders, getOrdersById, updateOrderStatus,updateOrderStatusByString et création method getAdminIdFromToken,isOrderAdmin" />
     <MESSAGE value="Mise à jour class AdminControllerTest" />
     <MESSAGE value="Mise à jour methods getAllOrders, getOrdersById, updateOrderStatus,getAllOrders, getOrderByIdByAdmin" />
@@ -639,6 +664,7 @@
     <MESSAGE value="Mise à jour et connexion avec api-gateway" />
     <MESSAGE value="Ajout JwtSecurityContextRepository pour la prochaine étape de faire en sorte que gate-way gére le token et envoie userId, role vers les autres services" />
     <MESSAGE value="Mise en place dossier parent et ajout de modules" />
-    <option name="LAST_COMMIT_MESSAGE" value="Mise en place dossier parent et ajout de modules" />
+    <MESSAGE value="Mise à jour pour mettre en relation avec api-gateway" />
+    <option name="LAST_COMMIT_MESSAGE" value="Mise à jour pour mettre en relation avec api-gateway" />
   </component>
 </project>
