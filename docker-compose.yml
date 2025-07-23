@@ -30,6 +30,26 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     networks:
         - ff-network
+  # Kafka UI avec authentication administration
+  kafka-ui:
+      image: provectuslabs/kafka-ui:latest
+      container_name: kafka-ui
+      ports:
+      - "9093:8080"
+      environment:
+        KAFKA_CLUSTERS_0_NAME: Local Kafka
+        KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
+        KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+        KAFKA_CLUSTERS_0_READONLY: false
+#        AUTH_TYPE: LOGIN
+#        AUTH_LOGIN: admin
+#        AUTH_PASSWORD_ENCODED: $2a$10$9tHkO9ppnjlijYq2TTQ3v.sWa8O5areo8u2Hod8nJ73SaTll.onsO
+#        AUTH_PASSWORD_HASH: bcrypt
+#        AUTH_ADMIN_LOGIN: ADMIN
+      depends_on:
+      - kafka
+      networks:
+      - ff-network
 
 networks:
     ff-network:

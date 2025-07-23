@@ -24,7 +24,8 @@ public class UserService {
 
     @Transactional
     public Orders createOrder(Long userId, OrderRequest orders) throws JsonProcessingException {
-        // calculate total price and quantity
+
+
         if (orders.getQuantity() <= 0) {
             throw new IllegalArgumentException("Quantity must be greater than zero");
         }
