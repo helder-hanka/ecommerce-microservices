@@ -4,35 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="de07dcb3-e15d-4895-bf72-ec27dd8f2a0d" name="Changes" comment="Ajout de Kafka UI  + Auth">
-      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/ApiResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/OrderItemDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/OrderItemResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/OrderResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/ProductStockResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/entity/OrderItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/repository/OrderItemRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/service/ProductServiceClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/dto/StockResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clients-service/src/main/java/com/ff/clients_service/config/Swagger.java" beforeDir="false" afterPath="$PROJECT_DIR$/clients-service/src/main/java/com/ff/clients_service/config/Swagger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commandes-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/OrderCreatedEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/OrderCreatedEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/dto/OrderRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/entity/Orders.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/entity/Orders.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/repository/OrderRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/repository/OrderRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/service/AdminService.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/service/AdminService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/java/com/ff/commandes_service/service/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commandes-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/commandes-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/config/Swagger.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/config/Swagger.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/controller/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/controller/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/dto/StockUpdateRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/dto/StockUpdateRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/security/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/service/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/java/com/ff/products_service/service/ProductService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/product-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/product-service/src/main/resources/application.properties" afterDir="false" />
-    </list>
+    <list default="true" id="de07dcb3-e15d-4895-bf72-ec27dd8f2a0d" name="Changes" comment="Mise à jour class methods pour kafka" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -631,13 +603,26 @@
       <option name="project" value="LOCAL" />
       <updated>1753282939899</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Delete class OrderRequest">
+      <option name="closed" value="true" />
+      <created>1753798397581</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1753798397581</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Mise à jour class methods pour kafka">
+      <option name="closed" value="true" />
+      <created>1753798516959</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1753798516959</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Mise à jour methods getAllOrders, getOrdersById, updateOrderStatus,getAllOrders, getOrderByIdByAdmin" />
-    <MESSAGE value="Mise à jour AdminServiceTest" />
-    <MESSAGE value="Mise à jour Jwt: secret, expiration" />
     <MESSAGE value="Création class CustomAccessDeniedHandler" />
     <MESSAGE value="Création class CustomAuthenticationEntryPoint" />
     <MESSAGE value="Création class ErrorResponse" />
@@ -660,6 +645,9 @@
     <MESSAGE value="Mise à jour pour mettre en relation avec api-gateway" />
     <MESSAGE value="Mise à jour et mettre Kafka en place sur Order, Payment" />
     <MESSAGE value="Ajout de Kafka UI  + Auth" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ajout de Kafka UI  + Auth" />
+    <MESSAGE value="Delete class OrderRequest" />
+    <MESSAGE value="Mise à jour class methods pour kaffka" />
+    <MESSAGE value="Mise à jour class methods pour kafka" />
+    <option name="LAST_COMMIT_MESSAGE" value="Mise à jour class methods pour kafka" />
   </component>
 </project>
