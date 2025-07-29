@@ -1,7 +1,8 @@
 package com.ff.commandes_service.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.ff.commandes_service.dto.OrderRequest;
+import com.ff.commandes_service.dto.OrderItemDto;
+import com.ff.commandes_service.dto.OrderResponse;
 import com.ff.commandes_service.entity.OrderStatus;
 import com.ff.commandes_service.entity.Orders;
 import com.ff.commandes_service.security.JwtService;
@@ -22,7 +23,8 @@ public class UserController {
     private  final JwtService jwtService;
 
     @PostMapping
-    public Orders createOrder(@Valid @RequestBody OrderRequest orders, HttpServletRequest request) throws JsonProcessingException {
+    //public OrderResponse createOrder(@Valid @RequestBody OrderRequest orders, HttpServletRequest request) throws JsonProcessingException {
+    public OrderResponse createOrder(@Valid @RequestBody List<OrderItemDto> orders, HttpServletRequest request) throws JsonProcessingException {
         //Get userId from token
         Long userId = getUsersTokenAndVerifyIsExist(request);
         return userService.createOrder(userId, orders);
@@ -40,7 +42,7 @@ public class UserController {
         return userService.getOrdersByStatus(userId, OrderStatus.valueOf(status.toUpperCase()));
     }
     @GetMapping("/{id}")
-    public Orders getOrderById(@PathVariable Long id, HttpServletRequest request) {
+    public OrderResponse getOrderById(@PathVariable Long id, HttpServletRequest request) {
         //Get userId from token
         Long userId = getUsersTokenAndVerifyIsExist(request);
         return userService.getOrderById(id, userId);

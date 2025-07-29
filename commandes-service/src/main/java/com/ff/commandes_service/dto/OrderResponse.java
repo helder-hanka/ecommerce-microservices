@@ -1,7 +1,9 @@
 package com.ff.commandes_service.dto;
 
 
+import com.ff.commandes_service.entity.OrderItem;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,23 +14,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderCreatedEvent {
-    private Long id;
+@Builder
+public class OrderResponse {
+    private Long orderId;
     private Long userId;
     private String status;
     private BigDecimal totalAmount;
     private LocalDateTime createdAt;
-    private List<OrderItemEvent> items;
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class OrderItemEvent {
-        private Long id;
-        private Long adminId;
-        private Long productId;
-        private String name;
-        private Integer quantity;
-        private BigDecimal price;
-    }
+    private List<OrderItemResponse> items;
 }

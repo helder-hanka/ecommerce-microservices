@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -16,19 +17,13 @@ import java.time.LocalDateTime;
 @Builder
 public class Orders {
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
     @Column(name = "user_id", nullable = false)
     private Long userId;
-    @Column(name = "admin_id", nullable = false)
-    private Long adminId;
-    @Column(nullable = false)
-    private int quantity;
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalPrice;
-    @Enumerated(value = jakarta.persistence.EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     private OrderStatus orderStatus;
     private LocalDateTime pendingDate;
     private LocalDateTime validatedDate;
@@ -38,5 +33,7 @@ public class Orders {
     private LocalDateTime returnedDate;
     private LocalDateTime refundedDate;
     private LocalDateTime orderDate;
+    @OneToMany(mappedBy ="order",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<OrderItem>items;
 
 }

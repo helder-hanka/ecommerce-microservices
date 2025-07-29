@@ -62,7 +62,11 @@ public class ProductService {
             throw new IllegalArgumentException("Stock cannot be negative");
         }
         if (product == null) return null;
-        product.setStock(stock);
+        if (product.getStock() < stock) {
+            throw new IllegalArgumentException("Insufficient stock for product with ID: " + productId);
+        }
+        // Decrement the stock
+        product.setStock(product.getStock() - stock);
         return productRepo.save(product);
     }
 }

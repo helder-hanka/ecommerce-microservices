@@ -24,8 +24,8 @@ public class Swagger {
                         .license(new License()
                         .name("Apache 2.0")
                         .url("http://www.apache.org/licenses/LICENSE-2.0.html")))
-                .servers(Arrays.asList(new Server().url("http://localhost:8080").description("Serveur development"),
-                        new Server().url("https://localhost:8080").description("Serveur production"))).components(new Components().addSecuritySchemes("bearer-key",
+                .servers(Arrays.asList(new Server().url("http://localhost:8081").description("Serveur development"),
+                        new Server().url("https://localhost:8081").description("Serveur production"))).components(new Components().addSecuritySchemes("bearer-key",
                         new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")

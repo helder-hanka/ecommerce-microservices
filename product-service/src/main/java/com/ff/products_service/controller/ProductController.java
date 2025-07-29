@@ -1,7 +1,6 @@
 package com.ff.products_service.controller;
 
 import com.ff.products_service.dto.*;
-import com.ff.products_service.entity.Image;
 import com.ff.products_service.entity.Product;
 import com.ff.products_service.service.ImageService;
 import com.ff.products_service.service.ProductService;
@@ -9,10 +8,8 @@ import com.ff.products_service.utils.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,13 +48,18 @@ public class ProductController {
 
     @GetMapping("/{id}/stock")
     @Operation(summary = "Récupérer le nombre de stock du produit par ID", description = "Récupère la quantité de stock disponible pour un produit spécifique.")
-    public ResponseEntity<?> getProductStock(@Parameter(description = "ID unique du produit dont on veut récupérer le stock", example = "1") @PathVariable Long id) {
+    public ResponseEntity<ApiRes<StockResponse>> getProductStock(@Parameter(description = "ID unique du produit dont on veut récupérer le stock", example = "1") @PathVariable Long id) {
 
        Product product = productService.findById(id);
        if (product == null) {
            throw new ResourceNotFoundException("Product not found with id " + id);
        }
-       return ResponseEntity.ok(ResponseBuilder.success("Product stock", product.getStock()));
+       StockResponse stockResponse = new StockResponse(
+              product.getId(),
+              product.getAdminId(),
+              product.getStock()
+       );
+       return ResponseEntity.ok(ResponseBuilder.success("Product stock", stockResponse));
     }
 
     // Update stock by product id

@@ -1,6 +1,7 @@
 package com.ff.commandes_service.controller;
 
 import com.ff.commandes_service.dto.CountOrdersResponse;
+import com.ff.commandes_service.dto.OrderResponse;
 import com.ff.commandes_service.dto.OrderStatusRequest;
 import com.ff.commandes_service.entity.Orders;
 import com.ff.commandes_service.security.JwtService;
@@ -21,14 +22,9 @@ public class AdminController {
     private final JwtService jwtService;
 
     @GetMapping
-    public ResponseEntity <Optional<List<Orders>>>getAllOrdersByAdmin(HttpServletRequest request) {
+    public List<OrderResponse>getAllOrdersByAdmin(HttpServletRequest request) {
         Long adminId = getAdminIdFromToken(request);
-        List<Orders> orders = adminService.getAllOrdersByAdmin(adminId);
-        if (orders.isEmpty()) {
-           throw new IllegalArgumentException("No orders found for admin with id: " + adminId);
-        }
-        return ResponseEntity.ok(Optional.of(orders));
-
+       return adminService.getAllOrdersByAdmin(adminId);
     }
     @GetMapping("/count")
     public CountOrdersResponse countOrders(HttpServletRequest request) {
@@ -65,12 +61,12 @@ public class AdminController {
 
         return adminId;
     }
-    private void isOrderAdmin(Long id, HttpServletRequest request, Orders order){
+   /* private void isOrderAdmin(Long id, HttpServletRequest request, Orders order){
         Long adminIdOrder = order.getAdminId();
 
         Long adminId = getAdminIdFromToken(request);
         if (!adminId.equals(adminIdOrder)) {
             throw new IllegalArgumentException("You are not authorized to access this order");
         }
-    }
+    }*/
 }

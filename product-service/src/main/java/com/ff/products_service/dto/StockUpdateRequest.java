@@ -1,5 +1,6 @@
 package com.ff.products_service.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class StockUpdateRequest {
-    private Long productId;
-    private Long adminId;
+//    private Long productId;
+//    private Long adminId;
+    @NotNull(message = "Product ID cannot be null")
     private int quantity;
 }
